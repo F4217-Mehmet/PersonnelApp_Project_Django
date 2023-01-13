@@ -209,3 +209,7 @@ REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'users.serializers.CustomTokenSerializer',
     
 }
+
+MEDIA_URL = '/media/'  #a image çmak istediğimde bu url gelecek
+MEDIA_ROOT = BASE_DIR / "pictures"  #base_dir'deki pictures altına kaydedeceğim
+STATIC_ROOT = BASE_DIR / STATIC_URL
