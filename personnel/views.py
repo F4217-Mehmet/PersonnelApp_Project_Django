@@ -46,6 +46,10 @@ class PersonnelListCreateView(generics.ListCreateAPIView):
         person.create_user = self.request.user
         person.save()
         return person
+
+class PersonalGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Personnel.objects.all()
+    serializer_class=PersonnelSerializer
     
 
 
