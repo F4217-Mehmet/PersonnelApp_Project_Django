@@ -13,7 +13,7 @@ class DepartmentView(generics.ListCreateAPIView):
 class PersonnelListCreateView(generics.ListCreateAPIView):
     serializer_class = PersonnelSerializer
     queryset = Personnel.objects.all()
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated, IsStafforReadOnly]
     
 
 
