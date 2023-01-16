@@ -2,7 +2,7 @@ from .models import Department, Personnel
 from .serializers import DepartmentSerializer, PersonnelSerializer
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsStafforReadOnly
+from .permissions import IsStafforReadOnly, IsOwnerAndStaffOrReadOnly
 from rest_framework import generics, status
 from rest_framework.response import Response
 
@@ -50,6 +50,7 @@ class PersonnelListCreateView(generics.ListCreateAPIView):
 class PersonalGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Personnel.objects.all()
     serializer_class=PersonnelSerializer
+    permission_classes = [IsAuthenticated, IsOwnerAndStaffOrReadOnly]
     
 
 
