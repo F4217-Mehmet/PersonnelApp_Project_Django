@@ -1,5 +1,5 @@
 from .models import Department, Personnel
-from .serializers import DepartmentSerializer, PersonnelSerializer
+from .serializers import DepartmentSerializer, PersonnelSerializer, DepartmentPersonnelSerializer
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsStafforReadOnly, IsOwnerAndStaffOrReadOnly
@@ -64,7 +64,7 @@ class PersonalGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
             }
             return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
-    def delete(self,request,*args,**kwargs):
+    def delete(self,request,*args,**kwargs): #silme işlemini sadece superuser yapabiliyor
         if self.request.user.is_superuser:
             return self.destroy(request,*args,**kwargs)
         else:
@@ -73,5 +73,11 @@ class PersonalGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
             }
             return Response(data ,status=status.HTTP_401_UNAUTHORIZED)
     
+class DepartmentPersonnelView(generics.ListAPIView):
+    serializer_class = DepartmentPersonnelSerializer
+    queryset = Department.objects.all()
 
+    def get_queryset(self):
+        name = self.kwargs["department"]
+        return Department.objects.filter(name__iexact=name)
 
