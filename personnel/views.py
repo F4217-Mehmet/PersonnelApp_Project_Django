@@ -50,7 +50,28 @@ class PersonnelListCreateView(generics.ListCreateAPIView):
 class PersonalGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Personnel.objects.all()
     serializer_class=PersonnelSerializer
-    permission_classes = [IsAuthenticated, IsOwnerAndStaffOrReadOnly]
+    # permission_classes = [IsAuthenticated,IsOwnerAndStafOrReadOnly]
+    permission_classes = [IsAuthenticated]
+
+    
+    def put(self, request, *args, **kwargs): #yukarıda permissionı kapadım, böyle yaptım
+        instance = self.get_object()
+        if self.request.user.is_staff and (instance.create_user == self.request.user):
+            return self.update(request, *args, **kwargs)
+        else:
+            data = {
+                "message": "You're not authorized to perform this operation"
+            }
+            return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+
+    def delete(self,request,*args,**kwargs):
+        if self.request.user.is_superuser:
+            return self.destroy(request,*args,**kwargs)
+        else:
+            data = {
+                "You're not authorized to perform this operation"
+            }
+            return Response(data ,status=status.HTTP_401_UNAUTHORIZED)
     
 
 
