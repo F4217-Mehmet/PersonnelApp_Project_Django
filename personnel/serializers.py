@@ -2,18 +2,18 @@ from rest_framework import serializers
 from .models import Department, Personnel
 from django.utils.timezone import now
 
-
 class DepartmentSerializer(serializers.ModelSerializer):
-
+    
     personnel_count = serializers.SerializerMethodField()
-
+    
     class Meta:
         model = Department
         fields = ("id", "name", "personnel_count")
-
-    def get_personnel_count(self, obj):  #obj her bir departmanı temsil ediyor
+        
+    def get_personnel_count(self, obj): #her obj bir departmanı temsil ediyor
         return obj.personals.count()
-
+    
+    
 class PersonnelSerializer(serializers.ModelSerializer):
     
     days_since_joined = serializers.SerializerMethodField()
@@ -32,15 +32,16 @@ class PersonnelSerializer(serializers.ModelSerializer):
         
     def get_days_since_joined(self, obj):
         return (now() - obj.start_date).days
+    
 
-    class DepartmentPersonnelSerializer(serializers.ModelSerializer):
+class DepartmentPersonnelSerializer(serializers.ModelSerializer):
     
-        personnel_count = serializers.SerializerMethodField()
-        personals = PersonnelSerializer(many=True, read_only=True)
+    personnel_count = serializers.SerializerMethodField()
+    personals = PersonnelSerializer(many=True, read_only=True)
     
-        class Meta:
-            model = Department
-            fields = ("id", "name", "personnel_count", "personals")
+    class Meta:
+        model = Department
+        fields = ("id", "name", "personnel_count", "personals")
         
-        def get_personnel_count(self, obj):
-            return obj.personals.count()
+    def get_personnel_count(self, obj):
+        return obj.personals.count()
